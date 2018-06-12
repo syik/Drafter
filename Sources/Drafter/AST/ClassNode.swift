@@ -15,6 +15,7 @@ class ClassNode: Node {
     var className: String = ""     // 类名
     var protocols: [String] = []   // 实现的协议
     var methods: [MethodNode] = [] // 方法
+    var invokers: [String] = []    // 存在过的方法调用者
     
     // sourcery:inline:ClassNode.AutoCodable
     required init(from decoder: Decoder) throws {
@@ -61,6 +62,21 @@ extension ClassNode {
         
         if let imp = implementation {
             self.methods = imp.methods
+            var invokersSet = Set<String>()
+            for method in imp.methods {
+                for invoke in method.invokes {
+                    let invoker = invoke.invoker
+                    switch invoker {
+                    case .name(let invokerNameTemp):
+                        invokersSet.insert(invokerNameTemp)
+                        break
+                    case .method(_):
+                        break
+                    }
+                }
+            }
+            
+           self.invokers = Array(invokersSet);
         }
     }
 }

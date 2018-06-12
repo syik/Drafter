@@ -25,7 +25,8 @@ class SourceLexer: Lexer {
         isSwift = file.hasSuffix(".swift")
         do {
             let content = try String(contentsOf: URL(fileURLWithPath: file), encoding: .utf8)
-            input = SourceLexer.removeAnnotaion(content)
+            let newContent = SourceLexer.removeAnnotaion(content)
+            input = SourceLexer.cleanContent(newContent)
         } catch {
             print(error)
             input = ""
@@ -195,6 +196,18 @@ class SourceLexer: Lexer {
         newStr = regexLine.stringByReplacingMatches(in: content, options: NSRegularExpression.MatchingOptions(rawValue:0), range: NSMakeRange(0, content.count), withTemplate: "")
         newStr = regexBlock.stringByReplacingMatches(in: newStr, options: NSRegularExpression.MatchingOptions(rawValue:0), range: NSMakeRange(0, newStr.count), withTemplate: "")
         return newStr
+    }
+    
+    /// 去除所有换行符, 多空格改为1空格
+    class func cleanContent(_ content: String) -> String {
+        var clearContent = content.replacingOccurrences(of: "\n", with: " ")
+        
+        while clearContent.contains("  ") {
+            clearContent = clearContent.replacingOccurrences(of: "  ", with: " ")
+        }
+        
+        clearContent = clearContent.replacingOccurrences(of: ": ", with: ":")
+        return clearContent
     }
 }
 

@@ -34,6 +34,7 @@ let selfOnly = BoolOption("self", "self-method-only", false, "Only contains the 
 
 let version = BoolOption("v", "version", false, "Print Drafter version")
 
+
 let cli = CommandLine()
 cli.addOptions(filePath, output, mode, search, selfOnly, version)
 
@@ -51,11 +52,13 @@ if version.value {
 }
 
 // 必须指定文件路径
-guard let paths = filePath.value else {
-    print("Error: File path was missing!")
-    cli.printUsage()
-    exit(EX_USAGE)
-}
+//guard let paths = filePath.value else {
+//    print("Error: File path was missing!")
+//    cli.printUsage()
+//    exit(EX_USAGE)
+//}
+
+let paths = "/Users/zhangjun/Desktop/NetworkProject/DYNetwork/DYNetwork"
 
 let drafter = Drafter()
 drafter.keywords = search.value?.split(by: ",").map { $0.lowercased() } ?? []
